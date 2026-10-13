@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card shadow p-4">
+          <h3 class="text-center mb-3">Iniciar sesión</h3>
+
+          {% if forms.erros %}
+            <div class="alert alert-danger">Usuario o contraseña incorrectos</div>
+          {% endif %}
+
+          <form action="" method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="id_username" class="form-label">Username</label>
+              <input type="text" name="username" class="form-control" id="id_username" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="id_password" class="form-label">Password</label>
+              <input type="text" name="password" class="form-control" id="id_password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

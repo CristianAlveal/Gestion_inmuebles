@@ -1,0 +1,194 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+  {% load humanize %}
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold">
+        <i class="bi bi-houses-fill"></i>
+        Inmuebles
+      </h2>
+
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalListado">
+        <i class="bi bi-file-earmark-text"></i>
+        Generar listado
+      </button>
+
+      {% if es_admin %}
+        <a href="{% url 'agregar_usuario' %}" class="btn btn-primary">
+          <i class="bi bi-person-plus-fill"></i>
+          Agregar usuario
+        </a>
+        <a href="{% url 'crear_inmueble' %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i>
+          Nuevo inmueble
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="card shadow border-0">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-striped align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>m² Totales</th>
+                <th>Habitaciones</th>
+                <th>Comuna</th>
+                <th>Precio mensual</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for inmueble in inmuebles %}
+                <tr>
+                  <td>{{ inmueble.id }}</td>
+
+                  <td>
+                    <strong>{{ inmueble.nombre }}</strong>
+                  </td>
+
+                  <td>{{ inmueble.m2_totales }} m²</td>
+
+                  <td>{{ inmueble.habitaciones }}</td>
+
+                  <td>{{ inmueble.comuna }}</td>
+
+                  <td>${{ inmueble.precio_mensual|intcomma }}</td>
+
+                  <td>{{ inmueble.disponible|yesno:'Disponible,Arrendada' }}</td>
+
+                  <td class="text-center">
+                    <!-- boton ver -->
+                    <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalInmueble{{ inmueble.id }}">
+                      <i class="bi bi-eye-fill"></i>
+                      Ver
+                    </button>
+
+                    <!-- EDITAR -->
+                    {% if es_admin %}
+
+                       {% if inmueble.disponible %}
+                      {% if not inmueble.tiene_solicitudes %}
+                        <a href="{% url 'editar_inmueble' inmueble.id %}" class="btn btn-sm btn-warning">
+                          <i class="bi bi-pencil-fill"></i>
+                          Editar
+                        </a>
+
+                        <!-- ELIMINAR -->
+
+                        <a href="{% url 'eliminar_inmueble' inmueble.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este inmueble?');">
+                          <i class="bi bi-trash-fill"></i>
+                          Eliminar
+                        </a>
+                      {% endif %}
+                    {% endif %}
+
+                    {% endif %}
+
+                    <!-- Solicita Arriendo -->
+                    {% if valida_arrendatario and not inmueble.tiene_solicitud_usuario %}
+                      <a href="{% url 'solicitar_arriendo' inmueble.id %}" class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil-fill"></i>
+                        Solicitar Arriendo
+                      </a>
+                    {% endif %}
+                  </td>
+                </tr>
+                <!-- SE LLAMA A MODAL VER INMUEBLE -->
+                {% include 'modal/modal_inmueble.html' %}
+              {% empty %}
+                <tr>
+                  <td colspan="8" class="text-center py-4">
+                    <div class="alert alert-info mb-0">
+                      <i class="bi bi-info-circle"></i>
+
+                      No existen inmuebles registrados.
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% if inmuebles.has_other_pages %}
+            <nav aria-label="Paginación de inmuebles">
+              <ul class="pagination justify-content-center">
+                <!-- Primera página -->
+
+                {% if inmuebles.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page=1">Primera</a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <span class="page-link">Primera</span>
+                  </li>
+                {% endif %}
+
+                <!-- Anterior -->
+
+                {% if inmuebles.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ inmuebles.previous_page_number }}"><i class="bi bi-chevron-left"></i></a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <span class="page-link"><i class="bi bi-chevron-left"></i></span>
+                  </li>
+                {% endif %}
+
+                <!-- Página actual -->
+
+                <li class="page-item active">
+                  <span class="page-link">{{ inmuebles.number }}</span>
+                </li>
+
+                <!-- Siguiente -->
+
+                {% if inmuebles.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ inmuebles.next_page_number }}"><i class="bi bi-chevron-right"></i></a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <span class="page-link"><i class="bi bi-chevron-right"></i></span>
+                  </li>
+                {% endif %}
+
+                <!-- Última página -->
+
+                {% if inmuebles.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ inmuebles.paginator.num_pages }}">Última</a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <span class="page-link">Última</span>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+          {% endif %}
+          <div class="text-center text-muted mb-3">
+            Mostrando página
+            <strong>{{ inmuebles.number }}</strong>
+            de
+            <strong>{{ inmuebles.paginator.num_pages }}</strong>
+
+            -
+
+            Total de inmuebles:
+            <strong>{{ inmuebles.paginator.count }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SE LLAMA A MODAL LISTADO INMUEBLE -->
+  {% include 'modal/modal_listado.html' %}
+{% endblock %}

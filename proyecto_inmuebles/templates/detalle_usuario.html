@@ -1,0 +1,149 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+          <!-- Encabezado -->
+
+          <div class="card-header bg-primary text-white text-center">
+            <h3 class="mb-0">
+              <i class="bi bi-person-circle"></i>
+              Datos del usuario
+            </h3>
+          </div>
+
+          <!-- Cuerpo -->
+
+          <div class="card-body">
+            <!-- Nombre completo -->
+
+            <div class="text-center mb-4">
+              <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 90px; height: 90px;">
+                <i class="bi bi-person-fill text-primary" style="font-size: 45px;"></i>
+              </div>
+
+              <h4>
+                {{ usuario.nombres }}
+                {{ usuario.apellidos }}
+              </h4>
+
+              <span class="badge
+                            {% if usuario.tipo_ususario == 'Arrendador' %}
+                  
+                                bg-success
+
+                {% else %}
+                  
+                                bg-info
+
+                {% endif %}">
+                {{ usuario.tipo_ususario }}
+              </span>
+            </div>
+
+            <hr />
+
+            <!-- DATOS PERSONALES -->
+
+            <h5 class="mb-3">
+              <i class="bi bi-person-vcard"></i>
+              Información personal
+            </h5>
+
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Nombres:</div>
+
+              <div class="col-sm-8">{{ usuario.nombres }}</div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Apellidos:</div>
+
+              <div class="col-sm-8">{{ usuario.apellidos }}</div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Teléfono:</div>
+
+              <div class="col-sm-8">
+                {% if usuario.telefono %}
+                  <i class="bi bi-telephone"></i>
+                  {{ usuario.telefono }}
+                {% else %}
+                  <span class="text-muted">No registrado</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Dirección:</div>
+
+              <div class="col-sm-8">
+                {% if usuario.direccion %}
+                  <i class="bi bi-geo-alt"></i>
+                  {{ usuario.direccion }}
+                {% else %}
+                  <span class="text-muted">No registrada</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Tipo de usuario:</div>
+
+              <div class="col-sm-8">
+                <span class="badge bg-secondary">{{ usuario.tipo_ususario }}</span>
+              </div>
+            </div>
+
+            <hr />
+
+            <!-- DATOS DE DJANGO USER -->
+
+            <h5 class="mb-3">
+              <i class="bi bi-shield-lock"></i>
+              Datos de cuenta
+            </h5>
+
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Usuario:</div>
+
+              <div class="col-sm-8">{{ usuario.usuario.username }}</div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-4 fw-bold">Correo:</div>
+
+              <div class="col-sm-8">
+                {% if usuario.usuario.email %}
+                  {{ usuario.usuario.email }}
+                {% else %}
+                  <span class="text-muted">No registrado</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+
+          <div class="card-footer text-center">
+            <a href="{% url 'index' %}" class="btn btn-secondary">
+              <i class="bi bi-arrow-left"></i>
+              Volver
+            </a>
+
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario">
+              <i class="bi bi-pencil"></i>
+              Editar datos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SE LLAMA A MODAL LISTADO INMUEBLE -->
+  {% include 'modal/modal_editar_usuario.html' %}
+{% endblock %}

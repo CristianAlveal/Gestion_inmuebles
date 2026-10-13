@@ -1,0 +1,50 @@
+[
+    {
+        "model": "gestion_inmuebles.usuario",
+        "pk": 1,
+        "fields": {
+            "usuario": 2,
+            "nombres": "Juan",
+            "apellidos": "Pérez González",
+            "telefono": "+56912345678",
+            "direccion": "Av. Providencia 1234, Providencia",
+            "tipo_ususario": "Arrendador"
+        }
+    },
+    {
+        "model": "gestion_inmuebles.usuario",
+        "pk": 2,
+        "fields": {
+            "usuario": 3,
+            "nombres": "María",
+            "apellidos": "Soto Rodríguez",
+            "telefono": "+56987654321",
+            "direccion": "Av. Grecia 2450, Ñuñoa",
+            "tipo_ususario": "Arrendatario"
+        }
+    },
+    {
+        "model": "gestion_inmuebles.usuario",
+        "pk": 3,
+        "fields": {
+            "usuario": 4,
+            "nombres": "Carlos",
+            "apellidos": "Muñoz Fernández",
+            "telefono": "+56911223344",
+            "direccion": "Av. Las Condes 4567, Las Condes",
+            "tipo_ususario": "Arrendador"
+        }
+    },
+    {
+        "model": "gestion_inmuebles.usuario",
+        "pk": 4,
+        "fields": {
+            "usuario": 5,
+            "nombres": "Ana",
+            "apellidos": "Vargas Morales",
+            "telefono": "+56955667788",
+            "direccion": "Av. Macul 3210, Macul",
+            "tipo_ususario": "Arrendatario"
+        }
+    }
+]

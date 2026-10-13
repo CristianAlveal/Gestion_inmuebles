@@ -1,0 +1,107 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+  {% load humanize %}
+
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold">
+        <i class="bi bi-houses-fill"></i>
+        Inmuebles Arrendador {{ request.user.username }}
+      </h2>
+
+      <a href="{% url 'crear_inmueble' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i>
+        Nuevo inmueble
+      </a>
+    </div>
+
+    <div class="card shadow border-0">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-striped align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>m² Totales</th>
+                <th>Habitaciones</th>
+                <th>Comuna</th>
+                <th>Precio mensual</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for inmueble in inmuebles %}
+                <tr>
+                  <td>{{ inmueble.id }}</td>
+
+                  <td>
+                    <strong>{{ inmueble.nombre }}</strong>
+                  </td>
+
+                  <td>{{ inmueble.m2_totales }} m²</td>
+
+                  <td>{{ inmueble.habitaciones }}</td>
+
+                  <td>{{ inmueble.comuna }}</td>
+
+                  <td>${{ inmueble.precio_mensual|intcomma }}</td>
+
+                  <td>{{ inmueble.disponible|yesno:'Disponible,Arrendada' }}</td>
+
+                  <td class="text-center">
+                    <!-- boton ver -->
+                    <button type="button" class="btn btn-sm btn-info text-black" data-bs-toggle="modal" data-bs-target="#modalInmueble{{ inmueble.id }}">
+                      <i class="bi bi-eye-fill"></i>
+                      Ver
+                    </button>
+
+                    <!-- EDITAR -->
+                    {% if inmueble.disponible %}
+                      {% if not inmueble.tiene_solicitudes %}
+                        <a href="{% url 'editar_inmueble' inmueble.id %}" class="btn btn-sm btn-warning">
+                          <i class="bi bi-pencil-fill"></i>
+                          Editar
+                        </a>
+
+                        <!-- ELIMINAR -->
+
+                        <a href="{% url 'eliminar_inmueble' inmueble.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este inmueble?');">
+                          <i class="bi bi-trash-fill"></i>
+                          Eliminar
+                        </a>
+                      {% endif %}
+                    {% endif %}
+                    <!-- SOLITAR ARRIENDO -->
+                    {% if inmueble.tiene_solicitudes %}
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSolicitud{{ inmueble.id }}">
+                        <i class="fa-solid fa-house-user"></i>
+                        Gestionar solicitud
+                      </button>
+                      {% include 'modal/modal_gestionar_solicitud.html' %}
+                    {% endif %}
+                  </td>
+                  <!-- SE LLAMA A MODAL VER INMUEBLE -->
+                  {% include 'modal/modal_inmueble.html' %}
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="8" class="text-center py-4">
+                    <div class="alert alert-info mb-0">
+                      <i class="bi bi-info-circle"></i>
+
+                      No existen inmuebles registrados.
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

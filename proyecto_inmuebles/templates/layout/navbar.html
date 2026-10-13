@@ -1,0 +1,109 @@
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+    <div class="container-fluid">
+
+        <!-- IZQUIERDA: Logo / nombre -->
+        <a class="navbar-brand fw-bold" href="{% url 'index' %}">
+            <i class="bi bi-house-door-fill"></i>
+            Casas en Arriendo
+        </a>
+
+        <!-- Botón responsive -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- DERECHA: Menú -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}"
+                       href="{% url 'index' %}">
+                       {% if  es_admin %}
+                        Panel Admin
+                        {% else %}
+                        Inicio
+                        {% endif %}
+                    </a>
+                </li>
+              
+  {% if valida_arrendador %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'inmuebles_arrendador' %}active{% endif %}"
+                       href="{% url 'inmuebles_arrendador' %}">
+                        Inmuebles Arrendador
+                    </a>
+                </li>
+    {% endif %}
+    
+    {% if valida_arrendatario %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'inmuebles_arrendatario' %}active{% endif %}"
+                       href="{% url 'inmuebles_arrendatario' %}">
+                        Inmuebles Arrendatario
+                    </a>
+                </li>
+    {% endif %}
+{% if valida_arrendatario or valida_arrendador %}
+                 <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'detalle_usuario' %}active{% endif %}"
+                       href="{% url 'detalle_usuario' usuario.id %}">
+                        Datos Usuario
+                    </a>
+                </li>
+{% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'acerca' %}active{% endif %}"
+                       href="{% url 'acerca' %}">
+                        Acerca
+                    </a>
+                </li>
+
+               
+               
+
+            </ul>
+             <!-- 2. Sección de Usuario / Sesión a la Derecha -->
+                <div class="d-flex align-items-center">
+                    {% if request.user.is_authenticated %}
+                        <!-- Saludo y rol -->
+                        <span class="text-black me-2"> | Bienvenido, <strong>{{ request.user.username }}</strong></span>
+                
+                        {% if request.user.is_superuser %}
+                            <span class="badge bg-danger ms-1 me-3">Admin</span>
+                        {% else %}
+                            {% if valida_arrendador %}
+                                     <span class="badge bg-danger ms-1 me-3">Arrendador</span>
+                             {% else %}
+                                     <span class="badge bg-secondary ms-1 me-3">Arrendatario</span>
+                           {% endif %} 
+
+                        {% endif %}
+
+                        <!-- Botón Cerrar Sesión -->
+                        <form action="{% url 'logout' %}" method="post" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-black btn-sm bg-info">Cerrar Sesión</button>
+                        </form>
+
+                    {% else %}
+                        <!-- Botón Iniciar Sesión (si aplica) -->
+                        <span class="text-black me-2"> | Bienvenido, Invitado</span>
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Iniciar Sesión</a>
+                    {% endif %}
+                </div>
+
+        </div>
+    </div>
+</nav>
+```

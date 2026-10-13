@@ -1,0 +1,101 @@
+<!-- BOTÓN GENERAR LISTADO -->
+
+<!-- MODAL -->
+
+<div class="modal fade" id="modalListado" tabindex="-1" aria-labelledby="modalListadoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- HEADER -->
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalListadoLabel">
+          <i class="bi bi-file-earmark-text"></i>
+
+          Generar listado de inmuebles DISPONIBLES
+        </h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- BODY -->
+
+      <div class="modal-body">
+        <!-- ================================= -->
+        <!-- LISTAR TODOS -->
+        <!-- ================================= -->
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Todos los inmuebles</label>
+
+          <a href="{% url 'generar_listado' %}" class="btn btn-primary w-100">
+            <i class="bi bi-list-ul"></i>
+
+            Listar todos
+          </a>
+        </div>
+
+        <hr />
+
+        <!-- ================================= -->
+        <!-- LISTAR POR COMUNA -->
+        <!-- ================================= -->
+
+        <form action="{% url 'generar_listado_comuna' %}" method="GET" class="mb-4">
+          <label class="form-label fw-bold">
+            <i class="bi bi-geo-alt"></i>
+
+            Listar por comuna
+          </label>
+
+          <select name="comuna" class="form-select" required>
+            <option value="">Seleccione una comuna</option>
+
+            {% for comuna in comunas %}
+              <option value="{{ comuna.id }}">{{ comuna.nombre }}</option>
+            {% endfor %}
+          </select>
+
+          <button type="submit" class="btn btn-success w-100 mt-2">
+            <i class="bi bi-file-earmark-text"></i>
+
+            Generar por comuna
+          </button>
+        </form>
+
+        <hr />
+
+        <!-- ================================= -->
+        <!-- LISTAR POR REGIÓN -->
+        <!-- ================================= -->
+
+        <form action="{% url 'generar_listado_region' %}" method="GET">
+          <label class="form-label fw-bold">
+            <i class="bi bi-map"></i>
+
+            Listar por región
+          </label>
+
+          <select name="region" class="form-select" required>
+            <option value="">Seleccione una región</option>
+
+            {% for region in regiones %}
+              <option value="{{ region.id }}">{{ region.nombre }}</option>
+            {% endfor %}
+          </select>
+
+          <button type="submit" class="btn btn-warning w-100 mt-2">
+            <i class="bi bi-file-earmark-text"></i>
+
+            Generar por región
+          </button>
+        </form>
+      </div>
+
+      <!-- FOOTER -->
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

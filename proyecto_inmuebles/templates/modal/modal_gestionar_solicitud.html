@@ -1,0 +1,118 @@
+<!-- MODAL GESTIONAR SOLICITUDES -->
+<div class="modal fade" id="modalSolicitud{{ inmueble.id }}" tabindex="-1" aria-labelledby="modalSolicitudLabel{{ inmueble.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalSolicitudLabel{{ inmueble.id }}">
+          <i class="fa-solid fa-house-user me-2"></i>
+          Solicitudes de arriendo
+        </h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+        <div class="mb-3">
+          <h5>{{ inmueble.nombre }}</h5>
+
+          <p class="text-muted mb-0">{{ inmueble.direccion }} -
+            {{ inmueble.comuna }}</p>
+        </div>
+
+        <hr />
+
+        <div class="table-responsive">
+          <table class="table table-hover table-striped align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Arrendatario</th>
+
+                <th>Fecha solicitud</th>
+
+                <th>Estado</th>
+
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for solicitud in inmueble.solicitudes.all %}
+                {% if solicitud.estado == 'PENDIENTE' %}
+                  <tr>
+                    <!-- ARRENDATARIO -->
+                    <td>
+                      <strong>{{ solicitud.arrendatario.get_full_name }}</strong>
+
+                      <br />
+
+                      <small class="text-muted">{{ solicitud.arrendatario.username }}</small>
+                    </td>
+
+                    <!-- FECHA -->
+                    <td>{{ solicitud.fecha_solicitud|date:'d/m/Y H:i' }}</td>
+
+                    <!-- ESTADO -->
+                    <td>
+                      <span class="badge bg-warning text-dark">Pendiente</span>
+                    </td>
+
+                    <!-- ACCIONES -->
+                    <td class="text-center">
+                      <div class="d-flex justify-content-center gap-2">
+                        <!-- ACEPTAR -->
+                        <form method="POST" action="{% url 'gestionar_solicitud' solicitud.id %}">
+                          {% csrf_token %}
+
+                          <input type="hidden" name="accion" value="aceptar" />
+
+                          <button type="submit" class="btn btn-success btn-sm" title="Aceptar solicitud">
+                            <i class="fa-solid fa-check"></i>
+
+                            Aceptar
+                          </button>
+                        </form>
+
+                        <!-- RECHAZAR -->
+                        <form method="POST" action="{% url 'gestionar_solicitud' solicitud.id %}">
+                          {% csrf_token %}
+
+                          <input type="hidden" name="accion" value="rechazar" />
+
+                          <button type="submit" class="btn btn-danger btn-sm" title="Rechazar solicitud">
+                            <i class="fa-solid fa-xmark"></i>
+
+                            Rechazar
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                {% endif %}
+              {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center text-muted py-4">
+                    <i class="fa-solid fa-inbox fa-2x mb-2"></i>
+
+                    <br />
+
+                    No existen solicitudes para este inmueble.
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fa-solid fa-xmark"></i>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
